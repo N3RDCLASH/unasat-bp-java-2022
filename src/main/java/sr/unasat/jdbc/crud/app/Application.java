@@ -12,27 +12,27 @@ public class Application {
         FysiekeDetailsRepository detailsRepo = new FysiekeDetailsRepository();
         PersoonRepository persoonRepo = new PersoonRepository();
 
-        System.out.println("All records found: \n" + detailsRepo.findAllRecords());
+        System.out.println("All records found: \n" + detailsRepo.findAllRecords() + "\n");
 
-        Persoon person1 = new Persoon("Kimbelie");
+        Persoon person1 = new Persoon("Wicki");
         int person1Id = persoonRepo.insertOneRecord(person1);
         person1.setId(person1Id);
 
         FysiekeDetails person1Details = new FysiekeDetails(170, 65, "vrouw", person1);
-        System.out.println("record inserted with id: " + detailsRepo.insertOneRecord(person1Details));
+        System.out.println("Inserted record with id: " + detailsRepo.insertOneRecord(person1Details) + "\n");
 
-        System.out.println("record with persoon id " + person1.getId() + ": " + detailsRepo.findOneRecord(person1));
+        System.out.println("Persoon with id " + person1.getId() + ": " + detailsRepo.findOneRecord(person1) + "\n");
 
 
         person1Details.setGewicht(70);
         detailsRepo.updateOneRecord(person1Details);
 
-        System.out.println("Update record with id:" + person1Details.getId());
         person1Details = detailsRepo.findOneRecord(person1Details.getPersoon());
-        System.out.println(person1Details);
+        System.out.println("Updated record with id:" + person1Details.getId() + "\n");
+        System.out.println(person1Details + "\n");
 
-        System.out.println("Delete record with id:" + person1Details.getId());
         detailsRepo.deleteOneRecord(person1Details);
+        System.out.println("Deleted record with id:" + person1Details.getId() + "\n");
     }
 
     private static void printAppHeader() {
