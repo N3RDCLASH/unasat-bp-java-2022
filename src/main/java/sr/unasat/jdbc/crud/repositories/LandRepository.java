@@ -1,7 +1,7 @@
 package sr.unasat.jdbc.crud.repositories;
 
 import sr.unasat.jdbc.crud.entities.Land;
-import sr.unasat.jdbc.crud.services.DatabaseService;
+import sr.unasat.jdbc.crud.services.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class LandRepository {
     Statement stmt;
     PreparedStatement pstmt;
     public LandRepository(){
-            this.connection = DatabaseService.getConnection();
+            this.connection = Database.getConnection();
     }
 
     public List<Land> findAllRecords() {

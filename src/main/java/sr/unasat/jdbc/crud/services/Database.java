@@ -6,11 +6,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseService  {
-    private static DatabaseService instance;
+public class Database {
+    private static Database instance;
     private static Connection connection;
 
-    private DatabaseService(){
+    private Database(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("De driver is geregistreerd!");
@@ -33,7 +33,7 @@ public class DatabaseService  {
 
     public static Connection getConnection(){
         if (instance == null) {
-            instance = new DatabaseService();
+            instance = new Database();
         }
         return connection;
     }
