@@ -30,7 +30,7 @@ public class ContactInformatieRepository {
                     " join land l  " +
                     " on l.id = ci.land_id";
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println("resultset: " + rs);
+            
             //STEP 5: Extract data from result set
             while (rs.next()) {
                 //Retrieve by column name
@@ -71,7 +71,7 @@ public class ContactInformatieRepository {
             pstmt.setInt(1, telNum);
             pstmt.setString(2, ciAdres);
             ResultSet rs = pstmt.executeQuery();
-            System.out.println("resultset: " + rs);
+            
             //STEP 5: Extract data from result set
             if (rs.next()) {
                 //Retrieve by column name
@@ -107,7 +107,7 @@ public class ContactInformatieRepository {
             pstmt.setInt(2, contact.getPersoon().getId());
             pstmt.setInt(3, contact.getId());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+            
 
         } catch (SQLException e) {
             e.printStackTrace();

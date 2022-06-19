@@ -24,7 +24,6 @@ public class FysiekeDetailsRepository {
             stmt = connection.createStatement();
             String sql = "select lengte,gewicht,geslacht,persoon_fysiek_details.id as fysieke_details_id,persoon.naam,persoon.id as persoon_id from persoon_fysiek_details inner join persoon on persoon_fysiek_details.persoon_id = persoon.id";
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println("resultset: " + rs);
             while (rs.next()) {
                 int id = rs.getInt("fysieke_details_id");
                 int gewicht = rs.getInt("gewicht");
@@ -48,7 +47,7 @@ public class FysiekeDetailsRepository {
             pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, persoon.getId());
             ResultSet rs = pstmt.executeQuery();
-            System.out.println("resultset: " + rs);
+            
             //STEP 5: Extract data from result set
             while (rs.next()) {
                 //Retrieve by column name
@@ -56,7 +55,7 @@ public class FysiekeDetailsRepository {
                 int gewicht = rs.getInt("gewicht");
                 int lengte = rs.getInt("lengte");
                 String geslacht = rs.getString("geslacht");
-                fysiekeDetails = new FysiekeDetails(id,lengte, gewicht, geslacht, persoon);
+                fysiekeDetails = new FysiekeDetails(id, lengte, gewicht, geslacht, persoon);
             }
             rs.close();
         } catch (SQLException e) {
@@ -71,13 +70,13 @@ public class FysiekeDetailsRepository {
         int insertId = 0;
         try {
             String sql = "insert into persoon_fysiek_details (lengte,gewicht,geslacht,persoon_id) values(?,?,?,?)";
-            pstmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+            pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, fysiekeDetails.getLengte());
             pstmt.setFloat(2, fysiekeDetails.getGewicht());
             pstmt.setString(3, fysiekeDetails.getGeslacht());
             pstmt.setInt(4, fysiekeDetails.getPersoon().getId());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+            
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     insertId = generatedKeys.getInt(1);
@@ -102,8 +101,22 @@ public class FysiekeDetailsRepository {
             pstmt.setString(3, fysiekeDetails.getGeslacht());
             pstmt.setInt(4, fysiekeDetails.getPersoon().getId());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+            
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int deleteOneRecord(Persoon persoon) {
+        int result = 0;
+        try {
+            String sql = "DELETE FROM persoon_fysiek_details WHERE persoon_id = ?";
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, persoon.getId());
+            result = pstmt.executeUpdate();
+            System.out.println("deleted: " + persoon.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }

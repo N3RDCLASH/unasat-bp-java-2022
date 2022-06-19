@@ -11,8 +11,8 @@ public class LandRepository {
     private final Connection connection;
     Statement stmt;
     PreparedStatement pstmt;
-    public LandRepository(){
-            this.connection = Database.getConnection();
+    public LandRepository() {
+        this.connection = Database.getConnection();
     }
 
     public List<Land> findAllRecords() {
@@ -21,10 +21,8 @@ public class LandRepository {
             stmt = connection.createStatement();
             String sql = "select * from land";
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println("resultset: " + rs);
             //STEP 5: Extract data from result set
             while (rs.next()) {
-                //Retrieve by column name
                 int id = rs.getInt("id");
                 String naam = rs.getString("naam");
                 landList.add(new Land(id, naam));
@@ -43,7 +41,7 @@ public class LandRepository {
             pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, land.getNaam());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }

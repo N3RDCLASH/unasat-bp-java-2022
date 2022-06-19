@@ -23,13 +23,12 @@ public class PersoonRepository {
             stmt = connection.createStatement();
             String sql = "select * from persoon";
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println("resultset: " + rs);
+            
             //STEP 5: Extract data from result set
             while (rs.next()) {
                 // Retrieve by column name
                 int id = rs.getInt("id");
                 String naam = rs.getString("naam");
-//
                 persoonList.add(new Persoon(id, naam));
             }
             rs.close();
@@ -50,7 +49,7 @@ public class PersoonRepository {
             pstmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, persoon.getNaam());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     insertId = generatedKeys.getInt(1);
@@ -72,7 +71,7 @@ public class PersoonRepository {
             pstmt.setInt(1, persoon.getId());
             pstmt.setString(2, persoon.getNaam());
             result = pstmt.executeUpdate();
-            System.out.println("resultset: " + result);
+            
 
         } catch (SQLException e) {
             e.printStackTrace();
