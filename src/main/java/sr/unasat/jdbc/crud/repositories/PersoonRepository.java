@@ -1,35 +1,23 @@
 package sr.unasat.jdbc.crud.repositories;
 
 import sr.unasat.jdbc.crud.entities.Persoon;
+import sr.unasat.jdbc.crud.services.DatabaseService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PersoonRepository {
-    private Connection connection;
+    private final Connection connection;
+    PreparedStatement pstmt ;
+    Statement stmt;
+
 
     public PersoonRepository() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("De driver is geregistreerd!");
-
-            String URL = "jdbc:mysql://localhost:3306/adres_boek";
-            String USER = "root";
-            String PASS = "root";
-            connection = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println(connection);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error: unable to load driver class!");
-            System.exit(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.connection = DatabaseService.getConnection();
     }
-
     public List<Persoon> findAllRecords() {
-        List<Persoon> persoonList = new ArrayList<Persoon>();
-        Statement stmt = null;
+        List<Persoon> persoonList = new ArrayList<>();
         try {
             stmt = connection.createStatement();
             String sql = "select * from persoon";
@@ -37,77 +25,62 @@ public class PersoonRepository {
             System.out.println("resultset: " + rs);
             //STEP 5: Extract data from result set
             while (rs.next()) {
-                //Retrieve by column name
+                // Retrieve by column name
                 int id = rs.getInt("id");
                 String naam = rs.getString("naam");
-            /*    //Display values
-               System.out.print("ID: " + id);
-               System.out.print(", Age: " + naam);*/
+//
                 persoonList.add(new Persoon(id, naam));
-                //  persoonList.add(new Persoon(rs.getInt("id"), rs.getString("naam")));
             }
             rs.close();
 
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return persoonList;
     }
 
     public int insertOneRecord(Persoon persoon) {
-        PreparedStatement stmt = null;
         int result = 0;
         try {
-            String sql = "insert into persoon (naam, id) values(?)";
-            stmt = connection.prepareStatement(sql);
-            stmt.setString(1, persoon.getNaam());
-            result = stmt.executeUpdate();
+            String sql = "insert into persoon (naam) values(?)";
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, persoon.getNaam());
+            result = pstmt.executeUpdate();
             System.out.println("resultset: " + result);
-
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return result;
     }
 
     public int updateOneRecord(Persoon persoon) {
-        PreparedStatement stmt = null;
         int result = 0;
         try {
-            String sql = "update persoon (id, naam) values(?,?)";
-            stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, persoon.getId());
-            stmt.setString(2, persoon.getNaam());
-            result = stmt.executeUpdate();
+            String sql = "UPDATE persoon SET naam = ? WHERE id=?";
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, persoon.getId());
+            pstmt.setString(2, persoon.getNaam());
+            result = pstmt.executeUpdate();
             System.out.println("resultset: " + result);
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return result;
     }
 
     public int deleteOneRecord(Persoon persoon) {
-        PreparedStatement stmt = null;
         int result = 0;
         try {
             String sql = "DELETE FROM persoon WHERE persoon.id = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, persoon.getId());
-            result = stmt.executeUpdate();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, persoon.getId());
+            result = pstmt.executeUpdate();
             System.out.println("deleted: " + persoon.getId());
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return result;
     }

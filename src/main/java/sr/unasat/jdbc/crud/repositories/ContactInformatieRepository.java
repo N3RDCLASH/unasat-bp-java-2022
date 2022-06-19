@@ -3,35 +3,24 @@ package sr.unasat.jdbc.crud.repositories;
 import sr.unasat.jdbc.crud.entities.ContactInformatie;
 import sr.unasat.jdbc.crud.entities.Land;
 import sr.unasat.jdbc.crud.entities.Persoon;
+import sr.unasat.jdbc.crud.services.DatabaseService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactInformatieRepository {
-    private Connection connection;
+    private final Connection connection;
+    private Statement stmt;
+    private PreparedStatement pstmt;
+
 
     public ContactInformatieRepository() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("De driver is geregistreerd!");
-
-            String URL = "jdbc:mysql://localhost:3306/adres_boek";
-            String USER = "root";
-            String PASS = "root";
-            connection = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println(connection);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error: unable to load driver class!");
-            System.exit(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.connection = DatabaseService.getConnection();
     }
 
     public List<ContactInformatie> findAllRecords() {
-        List<ContactInformatie> contactList = new ArrayList<ContactInformatie>();
-        Statement stmt = null;
+        List<ContactInformatie> contactList = new ArrayList<>();
         try {
             stmt = connection.createStatement();
             String sql = "select ci.id, ci.adres, ci.telefoon_nummer , p.id pid, p.naam pnaam, l.id lid, l.naam land_naam" +
@@ -64,16 +53,13 @@ public class ContactInformatieRepository {
 
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return contactList;
     }
 
     public ContactInformatie findOneRecord(int telNum, String ciAdres) {
         ContactInformatie contactInformatie = null;
-        PreparedStatement stmt = null;
         try {
             String sql = "select ci.id, ci.adres, ci.telefoon_nummer , p.id pid, p.naam pnaam, l.id lid, l.naam land_naam" +
                     " from contact_informatie ci" +
@@ -81,10 +67,10 @@ public class ContactInformatieRepository {
                     " on p.id = ci.persoon_id" +
                     " join land l" +
                     " on l.id = ci.land_id where ci.telefoon_nummer = ? or ci.adres = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, telNum);
-            stmt.setString(2, ciAdres);
-            ResultSet rs = stmt.executeQuery();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, telNum);
+            pstmt.setString(2, ciAdres);
+            ResultSet rs = pstmt.executeQuery();
             System.out.println("resultset: " + rs);
             //STEP 5: Extract data from result set
             if (rs.next()) {
@@ -107,29 +93,24 @@ public class ContactInformatieRepository {
 
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return contactInformatie;
     }
 
     public int updateOneRecord(ContactInformatie contact) {
-        PreparedStatement stmt = null;
         int result = 0;
         try {
             String sql = "update contact_informatie ci set ci.telefoon_nummer = ?, ci.persoon_id = ? where ci.id = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, contact.getTelefoonNummer());
-            stmt.setInt(2, contact.getPersoon().getId());
-            stmt.setInt(3, contact.getId());
-            result = stmt.executeUpdate();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, contact.getTelefoonNummer());
+            pstmt.setInt(2, contact.getPersoon().getId());
+            pstmt.setInt(3, contact.getId());
+            result = pstmt.executeUpdate();
             System.out.println("resultset: " + result);
 
         } catch (SQLException e) {
-
-        } finally {
-
+            e.printStackTrace();
         }
         return result;
     }

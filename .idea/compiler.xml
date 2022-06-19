@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jdbcCRUD" />
+        <module name="jdbc.crud" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
+      <module name="jdbc.crud" target="11" />
       <module name="jdbcCRUD" target="1.5" />
     </bytecodeTargetLevel>
   </component>
