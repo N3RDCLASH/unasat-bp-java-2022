@@ -9,13 +9,14 @@ import java.util.List;
 
 public class PersoonRepository {
     private final Connection connection;
-    PreparedStatement pstmt ;
+    PreparedStatement pstmt;
     Statement stmt;
 
 
     public PersoonRepository() {
         this.connection = Database.getConnection();
     }
+
     public List<Persoon> findAllRecords() {
         List<Persoon> persoonList = new ArrayList<>();
         try {
@@ -41,17 +42,26 @@ public class PersoonRepository {
     }
 
     public int insertOneRecord(Persoon persoon) {
-        int result = 0;
+        int result;
+        int insertId = 0;
+
         try {
             String sql = "insert into persoon (naam) values(?)";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, persoon.getNaam());
             result = pstmt.executeUpdate();
             System.out.println("resultset: " + result);
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    insertId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return insertId;
     }
 
     public int updateOneRecord(Persoon persoon) {

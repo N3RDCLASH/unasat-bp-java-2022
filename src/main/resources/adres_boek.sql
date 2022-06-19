@@ -29,7 +29,7 @@ CREATE TABLE `contact_informatie` (
   `id` int NOT NULL AUTO_INCREMENT,
   `adres` varchar(50) NOT NULL,
   `telefoon_nummer` int NOT NULL,
-  `persoon_id` int NOT NULL,
+`persoon_id` int NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -107,7 +107,7 @@ ADD CONSTRAINT `land_fk`
   lengte int NOT NULL,
   gewicht int NOT NULL,
   geslacht VARCHAR(5) NOT NULL, 
-  persoon_id int NOT NULL);
+  persoon_id int NOT NULL UNIQUE);
   
   ALTER TABLE `adres_boek`.`persoon_fysiek_details`
   ADD CONSTRAINT `persoon_fk`

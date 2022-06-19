@@ -1,59 +1,57 @@
 package sr.unasat.jdbc.crud.app;
 
-import sr.unasat.jdbc.crud.entities.ContactInformatie;
-import sr.unasat.jdbc.crud.entities.Land;
+import sr.unasat.jdbc.crud.entities.FysiekeDetails;
 import sr.unasat.jdbc.crud.entities.Persoon;
-import sr.unasat.jdbc.crud.repositories.ContactInformatieRepository;
-import sr.unasat.jdbc.crud.repositories.LandRepository;
+import sr.unasat.jdbc.crud.repositories.FysiekeDetailsRepository;
 import sr.unasat.jdbc.crud.repositories.PersoonRepository;
-
-import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) {
+        printAppHeader();
+        FysiekeDetailsRepository detailsRepo = new FysiekeDetailsRepository();
         PersoonRepository persoonRepo = new PersoonRepository();
-        List<Persoon> persoonList = persoonRepo.findAllRecords();
-        for (Persoon persoon : persoonList) {
-            System.out.println(persoon);
-        }
 
-         Persoon sarah = new Persoon("Sarah");
-        persoonRepo.insertOneRecord(sarah);
+        System.out.println("All records found: \n" + detailsRepo.findAllRecords());
 
-        ContactInformatieRepository ciRepo = new ContactInformatieRepository();
-        List<ContactInformatie> contactList = ciRepo.findAllRecords();
-        for (ContactInformatie contact : contactList) {
-            System.out.println(contact);
-        }
+        Persoon person1 = new Persoon("Kimbelie");
+        int person1Id = persoonRepo.insertOneRecord(person1);
+        person1.setId(person1Id);
 
-        LandRepository landRepo = new LandRepository();
+        FysiekeDetails person1Details = new FysiekeDetails(170, 65, "vrouw", person1);
+        System.out.println("record inserted with id: " + detailsRepo.insertOneRecord(person1Details));
 
-  //      Land guyana = new Land("Guyana");
-  //      landRepo.insertOneRecord(guyana);
-
-        List<Land> landList = landRepo.findAllRecords();
-        for (Land land : landList) {
-            System.out.println(land);
-        }
-
-/*        Persoon person = new Persoon(4);
-        persoonRepo.deleteOneRecord(person);*/
-
-//        int pk = persoonRepo.insertOneRecord(new Persoon("Ellen"));
-
-//        ContactInformatieRepository ci = new ContactInformatieRepository();
-//        ContactInformatie recordFound = ci.findOneRecord(1234, "Manjastraat 10");
-//        System.out.println("single record: " + ci);
-//
-//        recordFound.setTelefoonNummer(8888);
-//        recordFound.getPersoon().setId(4);
-//        ci.updateOneRecord(recordFound);
-//
-//        System.out.println(ci.findAllRecords());
+        System.out.println("record with persoon id " + person1.getId() + ": " + detailsRepo.findOneRecord(person1));
 
 
+        person1Details.setGewicht(70);
+        detailsRepo.updateOneRecord(person1Details);
+
+        System.out.println("Update record with id:" + person1Details.getId());
+        person1Details = detailsRepo.findOneRecord(person1Details.getPersoon());
+        System.out.println(person1Details);
+
+        System.out.println("Delete record with id:" + person1Details.getId());
+        detailsRepo.deleteOneRecord(person1Details);
     }
 
-
+    private static void printAppHeader() {
+        System.out.println("\n" + "\n" +
+                "\"───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\\n\" +\n" +
+                "\"─██████████████─████████████───████████████████───██████████████─██████████████────██████████████───██████████████─██████████████─██████──████████─\\n\" +\n" +
+                "\"─██░░░░░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░░░░░░░░░██────██░░░░░░░░░░██───██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░░░██─\\n\" +\n" +
+                "\"─██░░██████░░██─██░░████░░░░██─██░░████████░░██───██░░██████████─██░░██████████────██░░██████░░██───██░░██████░░██─██░░██████████─██░░██──██░░████─\\n\" +\n" +
+                "\"─██░░██──██░░██─██░░██──██░░██─██░░██────██░░██───██░░██─────────██░░██────────────██░░██──██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██───\\n\" +\n" +
+                "\"─██░░██████░░██─██░░██──██░░██─██░░████████░░██───██░░██████████─██░░██████████────██░░██████░░████─██░░██──██░░██─██░░██████████─██░░██████░░██───\\n\" +\n" +
+                "\"─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░░░░░░░░░██────██░░░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██───\\n\" +\n" +
+                "\"─██░░██████░░██─██░░██──██░░██─██░░██████░░████───██░░██████████─██████████░░██────██░░████████░░██─██░░██──██░░██─██░░██████████─██░░██████░░██───\\n\" +\n" +
+                "\"─██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─────██░░██─────────────────██░░██────██░░██────██░░██─██░░██──██░░██─██░░██─────────██░░██──██░░██───\\n\" +\n" +
+                "\"─██░░██──██░░██─██░░████░░░░██─██░░██──██░░██████─██░░██████████─██████████░░██────██░░████████░░██─██░░██████░░██─██░░██████████─██░░██──██░░████─\\n\" +\n" +
+                "\"─██░░██──██░░██─██░░░░░░░░████─██░░██──██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██────██░░░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░░░██─\\n\" +\n" +
+                "\"─██████──██████─████████████───██████──██████████─██████████████─██████████████────████████████████─██████████████─██████████████─██████──████████─\\n\" +\n" +
+                "\"───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\");\n" +
+                "\n" +
+                "\n"
+                + "Project Authors:\n Kimbelie Chotkan\n Zakur Lie-A-Ling \n Joel Naarenodorp \n Rouche Ronosemito \n Chagally Schenkers\n Shared Sewruttan \n ");
+    }
 }
