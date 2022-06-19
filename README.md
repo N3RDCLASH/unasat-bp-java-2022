@@ -1,9 +1,14 @@
 # jdbcCRUD
-jdbc Crud example application
+jdbc Crud
 
-#SQL Script
-De sql script is geplaats in de resource folder.
-De sql script bevat de schema & insert statements.
+## SQL Script
+SQL script is located in the rescources folder.
 
-#Opdracht
-Maak het project af conform de beroepsproduct opdracht van blok 2.1.
+## Connection
+To establish a connection to the database make a `.env` file from the `.env.example` file and enter the credentials corresponding to your database instance.
+
+```env
+DATABASE_URL = 
+DATABASE_USER = 
+DATABASE_PASSWORD =
+```
