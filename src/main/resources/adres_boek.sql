@@ -44,7 +44,6 @@ INSERT INTO `contact_informatie` VALUES (1,'suriname straat 15',2345672,1),(2,'S
 /*!40000 ALTER TABLE `contact_informatie` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
 -- Table structure for table `persoon`
 --
 
@@ -62,6 +61,7 @@ CREATE TABLE `persoon` (
 --
 -- Dumping data for table `persoon`
 --
+
 
 LOCK TABLES `persoon` WRITE;
 /*!40000 ALTER TABLE `persoon` DISABLE KEYS */;
@@ -99,8 +99,19 @@ ALTER TABLE `adres_boek`.`contact_informatie`
 ADD CONSTRAINT `land_fk`
   FOREIGN KEY (`land_id`)
   REFERENCES `adres_boek`.`land` (`id`);
-
-
-
-
-
+  
+  DROP TABLE IF EXISTS `persoon_fysiek_details`;
+  
+  CREATE TABLE `persoon_fysiek_details` (
+  id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  lengte int NOT NULL,
+  gewicht int NOT NULL,
+  geslacht VARCHAR(5) NOT NULL, 
+  persoon_id int NOT NULL);
+  
+  ALTER TABLE `adres_boek`.`persoon_fysiek_details`
+  ADD CONSTRAINT `persoon_fk`
+  FOREIGN KEY (`persoon_id`)
+  REFERENCES `adres_boek`.`persoon` (`id`);
+  
+  INSERT INTO `persoon_fysiek_details` VALUES (1, 180, 75, 'Male',1);
