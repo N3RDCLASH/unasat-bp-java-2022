@@ -98,7 +98,7 @@ ADD INDEX `land_fk_idx` (`land_id`);
 ALTER TABLE `adres_boek`.`contact_informatie`
 ADD CONSTRAINT `land_fk`
   FOREIGN KEY (`land_id`)
-  REFERENCES `adres_boek`.`land` (`id`);
+  REFERENCES `adres_boek`.`land` (`id`) ON DELETE  CASCADE;
   
   DROP TABLE IF EXISTS `persoon_fysiek_details`;
   
@@ -112,6 +112,6 @@ ADD CONSTRAINT `land_fk`
   ALTER TABLE `adres_boek`.`persoon_fysiek_details`
   ADD CONSTRAINT `persoon_fk`
   FOREIGN KEY (`persoon_id`)
-  REFERENCES `adres_boek`.`persoon` (`id`);
+  REFERENCES `adres_boek`.`persoon` (`id`) ON DELETE  CASCADE;
   
   INSERT INTO `persoon_fysiek_details` VALUES (1, 180, 75, 'Male',1);
